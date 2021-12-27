@@ -27,7 +27,17 @@ func main() {
 	// Parsing the flags provided by the user
 	flag.Parse()
 
-	fmt.Println(count(os.Stdin, *lines))
+	var fg string
+	if !*lines {
+		fg = "words"
+	} else {
+		fg = "lines"
+	}
+
+	ct := count(os.Stdin, *lines)
+
+	fmt.Printf("Number of %s count is %d\n", fg, ct)
+
 }
 
 // count
