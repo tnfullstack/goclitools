@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -13,25 +14,35 @@ number of words in the file and return the total number.
 
 How to run the program:
 $ wc < filename.txt
-
 `
 
 func main() {
 
-	fmt.Println(prompt)
-	fmt.Println(count(os.Stdin))
+	// Calling the counts function to count the number of words (or lines)
+	fmt.Print(prompt)
 
-	// TestCountWords()
+	// Defining a boolean flag -l to count lines instead of words
+	lines := flag.Bool("l", false, "Count lines")
+
+	// Parsing the flags provided by the user
+	flag.Parse()
+
+	fmt.Println(count(os.Stdin, *lines))
 }
 
 // count
-func count(r io.Reader) int {
-	// A scanner is used to read text from a Reader (such as files)
+func count(r io.Reader, countLines bool) int {
 
+	// A scanner is used to read text from a Reader (such as files)
 	scanner := bufio.NewScanner(r)
 
-	// Define the scanner split type to words (default is splist by lines)
-	scanner.Split(bufio.ScanWords)
+	// if the count lines flag is not set, we want to count the words
+	// the scanner split type to words, (dafault is split by lines)
+	if !countLines {
+		scanner.Split(bufio.ScanWords)
+	} else {
+		scanner.Split(bufio.ScanLines)
+	}
 
 	// Defining a counter
 	wc := 0

@@ -8,11 +8,11 @@ import (
 
 // TestCountWords test  the count function set to count words
 func TestCountWords(t *testing.T) {
-	b := bytes.NewBufferString("word1 word2 word3 word4\n")
+	b := bytes.NewBufferString("word1\n word2\n word3\n word4\n")
 	fmt.Println(b)
 	exp := 4
 
-	res := count(b)
+	res := count(b, false)
 
 	if res != exp {
 		t.Errorf("Expcted %d, go %d instead.\n", exp, res)
