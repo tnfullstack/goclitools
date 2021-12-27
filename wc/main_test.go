@@ -30,3 +30,15 @@ func TestCountLines(t *testing.T) {
 		t.Errorf("Expected %d, got %d instead.\n", exp, res)
 	}
 }
+
+func TestCountBytes(t *testing.T) {
+	b := bytes.NewBufferString("ABCDEFG")
+
+	exp := 7
+
+	res := count(b, true)
+
+	if res != exp {
+		t.Errorf("Expected %d, got %d instead.\n", exp, res)
+	}
+}
