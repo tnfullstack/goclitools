@@ -1,10 +1,11 @@
-package todo
+package todo_test
 
 import (
 	"io/ioutil"
 	"os"
 	"testing"
-	// "github.com/tnfullstack/goclitools/todo"
+
+	"github.com/tnfullstack/goclitools/todo"
 )
 
 // TestAdd test the Add method of the List type
@@ -24,7 +25,6 @@ func TestComplete(t *testing.T) {
 	l := todo.List{}
 
 	taskName := "New Task"
-
 	l.Add(taskName)
 
 	if l[0].Task != taskName {
@@ -35,7 +35,7 @@ func TestComplete(t *testing.T) {
 		t.Errorf("New task should not be completed.")
 	}
 
-	l.Completed(1)
+	l.Complete(1)
 
 	if !l[0].Done {
 		t.Errorf("New task shoud be completed")
@@ -63,7 +63,11 @@ func TestDelete(t *testing.T) {
 	l.Delete(2)
 
 	if len(l) != 2 {
-		t.Errorf("Expected %q got %q instead", 2, tasks[2], l[1].Task)
+		t.Errorf("Expected list length %d, got %d instead.", 2, len(l))
+	}
+
+	if l[1].Task != tasks[2] {
+		t.Errorf("Expected %q got %q instead.", tasks[2], l[1].Task)
 	}
 }
 
@@ -74,6 +78,7 @@ func TestSaveGet(t *testing.T) {
 
 	taskName := "New Task"
 	l1.Add(taskName)
+	l2 = l1
 
 	if l1[0].Task != taskName {
 		t.Errorf("Expected %q got %q instead.", taskName, l1[0].Task)
@@ -81,19 +86,19 @@ func TestSaveGet(t *testing.T) {
 
 	tf, err := ioutil.TempFile("", "")
 	if err != nil {
-		t.Fatalf("Error creating temp file %s\n", err)
+		t.Fatalf("Error creating temp file: %s", err)
 	}
 	defer os.Remove(tf.Name())
 
 	if err := l1.Save(tf.Name()); err != nil {
-		t.Fatalf("Error saving list to file %s", err)
+		t.Fatalf("Error saving list to file: %s", err)
 	}
 
 	if err := l2.Get(tf.Name()); err != nil {
-		t.Fatalf("Error getting list from file %s", err)
+		t.Fatalf("Error getting list from file: %s", err)
 	}
 
 	if l1[0].Task != l2[0].Task {
-		t.Errorf("Task %q should match %q task.", l1[0].Task, l2[0].Task)
+		t.Fatalf("Task %q should match %q task.", l1[0].Task, l2[0].Task)
 	}
 }

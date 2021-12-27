@@ -11,7 +11,6 @@ import (
 const todoFileName = ".todo.json"
 
 func main() {
-
 	// Define an item list
 	l := &todo.List{}
 
