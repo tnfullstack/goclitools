@@ -22,7 +22,7 @@ func main() {
 
 	// Decide what to do based on the number arguments provided
 	switch {
-	// For no extra argument print the list
+	// For no extra arguments, print the list
 	case len(os.Args) == 1:
 		// list current todo items
 		for _, item := range *l {

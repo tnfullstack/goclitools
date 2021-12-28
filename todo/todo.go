@@ -36,7 +36,7 @@ func (l *List) Add(task string) {
 func (l *List) Complete(i int) error {
 	ls := *l
 	if i <= 0 || i > len(ls) {
-		return fmt.Errorf("item %d does not exit", i)
+		return fmt.Errorf("item %d does not exist", i)
 	}
 
 	// Add item for 0 base index
@@ -65,7 +65,7 @@ func (l *List) Save(fn string) error {
 		return err
 	}
 
-	return ioutil.WriteFile("test1.txt", js, 0644)
+	return ioutil.WriteFile(fn, js, 0644)
 }
 
 // Get method open the provided filename, decodes the JSON data and parse it into a list
