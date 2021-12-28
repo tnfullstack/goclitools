@@ -60,5 +60,4 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Invalid option")
 		os.Exit(1)
 	}
-
 }
