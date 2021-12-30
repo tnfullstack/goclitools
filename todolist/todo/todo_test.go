@@ -1,11 +1,10 @@
 package todo_test
 
 import (
+	"goclitools/todo"
 	"io/ioutil"
 	"os"
 	"testing"
-
-	"github.com/tnfullstack/goclitools/todo"
 )
 
 // TestAdd test the Add method of the List type
@@ -88,6 +87,7 @@ func TestSaveGet(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error creating temp file: %s", err)
 	}
+
 	defer os.Remove(tf.Name())
 
 	if err := l1.Save(tf.Name()); err != nil {

@@ -1,3 +1,3 @@
-module goclitools/toto
+module goclitools
 
 go 1.17

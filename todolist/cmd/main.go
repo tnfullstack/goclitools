@@ -3,10 +3,20 @@ package main
 import (
 	"flag"
 	"fmt"
+	"goclitools/todo"
 	"os"
 )
 
-const todoFileName = ".todo.json"
+const (
+	todoFileName = ".todo.json"
+	usage        = `
+Usage: 
+./todo -list (list todo items)
+./todo -task (add new todo item)
+./todo -complete 1 (marks item 1 as completed)
+
+`
+)
 
 func main() {
 
@@ -55,7 +65,13 @@ func main() {
 		}
 	default:
 		// Invalid flag provided
-		fmt.Fprintln(os.Stderr, "Invalid option")
-		os.Exit(1)
+		fmt.Println("TASK LIST")
+		fmt.Println("----------")
+		for i, item := range *l {
+			if !item.Done {
+				fmt.Printf("#%d %s\n", i+1, item.Task)
+			}
+		}
+		fmt.Print(usage)
 	}
 }
