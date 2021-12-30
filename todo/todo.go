@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 )
@@ -65,12 +64,12 @@ func (l *List) Save(fn string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(fn, js, 0644)
+	return os.WriteFile(fn, js, 0644)
 }
 
 // Get method open the provided filename, decodes the JSON data and parse it into a list
 func (l *List) Get(fn string) error {
-	f, err := ioutil.ReadFile(fn)
+	f, err := os.ReadFile(fn)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil
