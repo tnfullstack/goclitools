@@ -4,8 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-
-	"github.com/tnfullstack/goclitools/todo"
 )
 
 const todoFileName = ".todo.json"
