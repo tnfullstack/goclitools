@@ -1,10 +1,13 @@
 package todo
 
 import (
+	"bufio"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -110,4 +113,24 @@ func (l *List) Get(fn string) error {
 	}
 
 	return json.Unmarshal(file, l)
+}
+
+// getTask
+func GetTask(r io.Reader, args ...string) (string, error) {
+
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	s := bufio.NewScanner(r)
+	s.Scan()
+
+	if err := s.Err(); err != nil {
+		return "", err
+	}
+
+	if len(s.Text()) == 0 {
+		return "", fmt.Errorf("task cannot be blank")
+	}
+	return s.Text(), nil
 }
