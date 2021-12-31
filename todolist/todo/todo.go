@@ -9,7 +9,7 @@ import (
 )
 
 type Stringer interface {
-	String() string
+	String(v, o bool) string
 }
 
 // item struct
@@ -36,17 +36,25 @@ func (l *List) Add(task string) {
 
 //String prints out a formatted list​
 //Implements the fmt.Stringer interface​
-func (l *List) String() string {
+func (l List) String(v, o bool) string {
 	formatted := ""
 
-	for k, t := range *l {
+	for k, t := range l {
 		prefix := "  "
 		if t.Done {
 			prefix = "X "
 		}
-
-		// Adjust the item list
-		formatted += fmt.Sprintf("%s%d: %s\n", prefix, k+1, t.Task)
+		switch {
+		case v:
+			formatted += fmt.Sprintf("%s%d: %s, date: %v\n", prefix, k+1, t.Task, t.CreatedAt)
+		case o:
+			if t.Done {
+				continue
+			}
+			formatted += fmt.Sprintf("%s%d: %s\n", prefix, k+1, t.Task)
+		default:
+			formatted += fmt.Sprintf("%s%d: %s\n", prefix, k+1, t.Task)
+		}
 	}
 	return formatted
 }
