@@ -41,7 +41,7 @@ func TestMain(m *testing.M) {
 
 // TestTodoCLI
 func TestTodoCLI(t *testing.T) {
-	task := "Test task number 1"
+	task := "test task number 1"
 
 	dir, err := os.Getwd()
 	if err != nil {
@@ -63,7 +63,7 @@ func TestTodoCLI(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		expected := task + "\n"
+		expected := fmt.Sprintf("  1: %s\n", task)
 
 		if expected != string(out) {
 			t.Errorf("Expected, %q got %q instead\n", expected, string(out))

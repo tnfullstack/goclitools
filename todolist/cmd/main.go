@@ -7,18 +7,22 @@ import (
 	"os"
 )
 
-const (
-	todoFileName = ".todo.json"
-	usage        = `
+const usage = `
 Usage: 
 ./todo -list (list todo items)
 ./todo -task (add new todo item)
 ./todo -complete 1 (marks item 1 as completed)
 
 `
-)
+
+var todoFileName = "data.json"
 
 func main() {
+
+	// Check if the user definded ENV VAR for a custom file name
+	if os.Getenv("TODO_FILENAME") != "" {
+		todoFileName = os.Getenv("TODO_FILENAME")
+	}
 
 	// Parsing command-line flags
 	task := flag.String("task", "", "Task to be included in the ToDo list")
@@ -39,11 +43,10 @@ func main() {
 	switch {
 	case *list:
 		// list current todo items
-		for _, item := range *l {
-			if !item.Done {
-				fmt.Println(item.Task)
-			}
-		}
+		fmt.Println("ToDo List")
+		fmt.Println("----------")
+		fmt.Print(l)
+
 	case *complete > 0:
 		// complete the given item
 		if err := l.Complete(*complete); err != nil {
@@ -65,13 +68,6 @@ func main() {
 		}
 	default:
 		// Invalid flag provided
-		fmt.Println("TASK LIST")
-		fmt.Println("----------")
-		for i, item := range *l {
-			if !item.Done {
-				fmt.Printf("#%d %s\n", i+1, item.Task)
-			}
-		}
 		fmt.Print(usage)
 	}
 }

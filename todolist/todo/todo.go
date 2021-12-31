@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+type Stringer interface {
+	String() string
+}
+
 // item struct
 type item struct {
 	Task        string
@@ -19,7 +23,6 @@ type item struct {
 // List represents a list of items
 type List []item
 
-// Add creates a new todo item and append it to the List
 func (l *List) Add(task string) {
 	t := item{
 		Task:        task,
@@ -29,6 +32,23 @@ func (l *List) Add(task string) {
 	}
 
 	*l = append(*l, t)
+}
+
+//String prints out a formatted list​
+//Implements the fmt.Stringer interface​
+func (l *List) String() string {
+	formatted := ""
+
+	for k, t := range *l {
+		prefix := "  "
+		if t.Done {
+			prefix = "X "
+		}
+
+		// Adjust the item list
+		formatted += fmt.Sprintf("%s%d: %s\n", prefix, k+1, t.Task)
+	}
+	return formatted
 }
 
 // Complete method marks an item as completed by setting done = true and completedAt = current time
