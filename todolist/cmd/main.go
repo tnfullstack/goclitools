@@ -1,20 +1,16 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"goclitools/todo"
-	"io"
 	"os"
-	"strings"
 )
 
 const (
 	usage = `
 Usage: 
 ./todo -list (list todo items)
-./todo -task (add new todo item)
 ./todo -complete 1 (marks item 1 as completed)
 ./todo -verbose (list todo items with date and time)
 ./todo -open (list only the open todo)
@@ -38,7 +34,7 @@ func main() {
 
 	// Parsing command-line flags
 	add := flag.Bool("add", false, "Task to the ToDo list")
-	task := flag.String("task", "", "Task to be included in the ToDo list")
+	// task := flag.String("task", "", "Task to be included in the ToDo list")
 	list := flag.Bool("list", false, "List all tasks")
 	complete := flag.Int("complete", 0, "Item to be completed")
 	del := flag.Int("delete", 0, "Item to be deleted")
@@ -61,15 +57,15 @@ func main() {
 		v, o = false, false
 		s := l.String(v, o)
 		// list current todo items
-		fmt.Print(head)
+		// fmt.Print(head)
 		fmt.Print(s)
 	case *ver:
 		v, o = true, false
 		s := l.String(v, o)
-		fmt.Print(head)
+		// fmt.Print(head)
 		fmt.Print(s)
 	case *add:
-		t, err := getTask(os.Stdin, flag.Args()...)
+		t, err := todo.GetTask(os.Stdin, flag.Args()...)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -81,10 +77,11 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
+
 	case *open:
 		v, o = false, true
 		s := l.String(v, o)
-		fmt.Print(head)
+		// fmt.Print(head)
 		fmt.Print(s)
 	case *complete > 0:
 		// complete the given item
@@ -93,14 +90,6 @@ func main() {
 			os.Exit(1)
 		}
 		// save the new list
-		if err := l.Save(todoFileName); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-	case *task != "":
-		// Add the task
-		l.Add(*task)
-		// Save the new list
 		if err := l.Save(todoFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -120,24 +109,4 @@ func main() {
 		// Invalid flag provided
 		fmt.Print(usage)
 	}
-}
-
-// getTask
-func getTask(r io.Reader, args ...string) (string, error) {
-	if len(args) > 0 {
-		return strings.Join(args, " "), nil
-	}
-
-	s := bufio.NewScanner(r)
-	s.Scan()
-
-	if err := s.Err(); err != nil {
-		return "", err
-	}
-
-	if len(s.Text()) == 0 {
-		return "", fmt.Errorf("task cannot be blank")
-	}
-
-	return s.Text(), nil
 }
