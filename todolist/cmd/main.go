@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"goclitools/todo"
+	"goclitools/todolist/todo"
 	"os"
 )
 
@@ -57,12 +57,12 @@ func main() {
 		v, o = false, false
 		s := l.String(v, o)
 		// list current todo items
-		// fmt.Print(head)
+		fmt.Print(head)
 		fmt.Print(s)
 	case *ver:
 		v, o = true, false
 		s := l.String(v, o)
-		// fmt.Print(head)
+		fmt.Print(head)
 		fmt.Print(s)
 	case *add:
 		t, err := todo.GetTask(os.Stdin, flag.Args()...)
@@ -81,7 +81,7 @@ func main() {
 	case *open:
 		v, o = false, true
 		s := l.String(v, o)
-		// fmt.Print(head)
+		fmt.Print(head)
 		fmt.Print(s)
 	case *complete > 0:
 		// complete the given item
