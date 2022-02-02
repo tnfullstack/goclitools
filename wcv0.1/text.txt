@@ -1,0 +1,8 @@
+“The count function uses the NewScanner function from the bufio package to create a new scanner. A scanner is a convenient way of reading data delimited by spaces or new lines. By default, a scanner reads lines of data, so we instruct the scanner to read words instead by setting the Split function of the scanner to bufio.ScanWords. We then define a variable, wc, to hold the word count and increment it by looping through each token using the scanner.Scan function and adding 1 to the counter each time. We then return the word count.
+
+In this example, for simplicity’s sake, we are ignoring the error that may be generated during the scanning. In your code, always check for errors. You’ll learn more about dealing with errors in the context of a command-line tool ”
+
+Excerpt From
+Powerful Command-Line Applications in Go
+Ricardo Gerardi
+This material may be protected by copyright.
