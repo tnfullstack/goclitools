@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"goclitools/todolist/todo"
+	"clitools/todolist/todo"
 	"os"
 )
 

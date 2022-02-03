@@ -1,7 +1,7 @@
 package todo_test
 
 import (
-	"goclitools/todolist/todo"
+	"clitools/todolist/todo"
 	"io/ioutil"
 	"os"
 	"testing"

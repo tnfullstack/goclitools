@@ -1,8 +1,8 @@
 package main
 
 import (
+	"clitools/todov0.1/todo"
 	"fmt"
-	"goclitools/todov0.1/todo"
 )
 
 func main() {

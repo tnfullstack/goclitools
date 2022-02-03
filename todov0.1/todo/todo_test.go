@@ -1,8 +1,8 @@
 package todo_test
 
 import (
+	"clitools/todolist/todo"
 	"fmt"
-	"goclitools/todolist/todo"
 	"testing"
 )
 
