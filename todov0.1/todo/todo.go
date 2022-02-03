@@ -68,7 +68,6 @@ func (l *List) Save(fname string) error {
 	if err != nil {
 		return err
 	}
-
 	return os.WriteFile(fname, js, 0644)
 }
 
