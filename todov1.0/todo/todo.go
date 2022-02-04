@@ -24,7 +24,6 @@ type List []Item
 // Implements the fmt.Stringer interface
 func (l *List) String() string {
 	formatted := ""
-
 	for i, item := range *l {
 		prefix := "  "
 		if item.Done {
@@ -44,7 +43,6 @@ func (l *List) Add(task string) {
 		CreateAt:   time.Now(),
 		CompleteAt: time.Time{},
 	}
-
 	*l = append(*l, t)
 }
 
@@ -55,7 +53,6 @@ func (l *List) Complete(i int) error {
 	if i <= 0 || i > len(ls) {
 		return fmt.Errorf("item %d does not exist", i)
 	}
-
 	// Adjusting index for 0 based index
 	// List = [0][1][2][3] (This is easy visualization only)
 	ls[i-1].Done = true
@@ -70,11 +67,9 @@ func (l *List) Delete(i int) error {
 	if i <= 0 || i > len(ls) {
 		return fmt.Errorf("item %d does not exist", i)
 	}
-
 	// Adjusting index for 0 base index
 	// List = [0][1][2][3]
 	*l = append(ls[:i-1], ls[i:]...)
-
 	return nil
 }
 
