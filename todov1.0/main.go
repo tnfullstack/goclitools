@@ -1,27 +1,34 @@
 package main
 
 import (
+	"bufio"
 	"clitools/todov1.0/todo"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 )
 
-// Hardcoding the file name
-const todoFilename = "data/todo.json"
+// default file name
+var todoFileName = "data/todo.json"
 
 func main() {
 	// Parse command line flags
-	task := flag.String("t", "", "Adding task to ToDo list")
-	list := flag.Bool("l", false, "List ToDo items")
-	done := flag.Int("d", 0, "Mark ToDo item as completed")
+	add := flag.Bool("add", false, "Add task to the todo list")
+	list := flag.Bool("list", false, "List ToDo items")
+	complete := flag.Int("complete", 0, "Mark ToDo item as completed")
 	flag.Parse()
 
+	// Check if the user defined the ENV VAR for a custom file name
+	if os.Getenv("TODO_FILENAME") != "" {
+		todoFileName = os.Getenv("TODO_FILENAME")
+	}
 	// Define a items list
 	l := &todo.List{}
 
 	// Get command to read todo items from file
-	if err := l.Get(todoFilename); err != nil {
+	if err := l.Get(todoFileName); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -33,23 +40,29 @@ func main() {
 		// List current todo items
 		fmt.Print(l)
 		// Add todo item to the list
-	case *task != "":
-		// Joint the command argument into on string
-		// item := strings.Join(os.Args[2:], " ")
-		l.Add(*task)
-		// Save the new list
-		if err := l.Save(todoFilename); err != nil {
+	case *add:
+		// When any arguments (excluding flag) are provided, they will be
+		// used as the new task
+		t, err := getTask(os.Stdin, flag.Args()...)
+		fmt.Println(t)
+		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-	case *done > 0:
+		l.Add(t)
+		// Save the new List
+		if err := l.Save(todoFileName); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+	case *complete > 0:
 		// Complete the given item
-		if err := l.Complete(*done); err != nil {
+		if err := l.Complete(*complete); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		// Save the list
-		if err := l.Save(todoFilename); err != nil {
+		if err := l.Save(todoFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -58,5 +71,21 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Invalid option")
 		os.Exit(1)
 	}
+}
 
+// getTask function decides where to get the description for a new
+// task from: arguments or STDIN
+func getTask(r io.Reader, args ...string) (string, error) {
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+	s := bufio.NewScanner(r)
+	s.Scan()
+	if err := s.Err(); err != nil {
+		return "", err
+	}
+	if len(s.Text()) == 0 {
+		return "", fmt.Errorf("task connot be blank")
+	}
+	return s.Text(), nil
 }
