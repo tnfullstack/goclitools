@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
-	"path/filepath"
+	"os/exec"
+	"runtime"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
@@ -31,6 +34,7 @@ const (
 func main() {
 	// Parse flags
 	fileName := flag.String("file", "", "Markdown file to repview")
+	skipPreview := flag.Bool("s", false, "Skip auto-preview")
 	flag.Parse()
 
 	// If user did not provide input file, show usage
@@ -39,35 +43,40 @@ func main() {
 		os.Exit(1)
 	}
 	// Call and pass the cmd flag and fileName to run func
-	if err := run(*fileName); err != nil {
+	if err := run(*fileName, os.Stdout, *skipPreview); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-// run function reads .md file from cli input, pass the input buffer
-// to parseContent function for html parsing, receive the html []byte
-// then pass []byes and the .html file name to saveHTML for writing to file
-func run(fname string) error {
-	fmt.Println(fname) // filename just as it type in from comand-line
+func run(fname string, out io.Writer, skipPreview bool) error {
 	// Read all the data from the input file and check for errors
 	input, err := os.ReadFile(fname)
-	fmt.Println("Content of the .md file\n", string(input)) // for testing purpose
 	if err != nil {
 		return err
 	}
 	// call and pass the .md []byte to parseContent func for html parsing
 	htmlData := parseContent(input)
-	fmt.Println(string(htmlData)) // This is just for testing purpose
-	// filepath.Base take the filename, cleanup path and only keep the base filename
-	// the add the .html to the end of the file name
-	outName := fmt.Sprintf("%s.html", filepath.Base(fname))
-	fmt.Println("New html file name", outName)
+
+	// Create temporary file and check for errors
+	temp, err := ioutil.TempFile("", "mdp*.html")
+	if err != nil {
+		return err
+	}
+	if err := temp.Close(); err != nil {
+		return err
+	}
+	outName := temp.Name()
+	fmt.Println(out, outName)
 
 	if err := saveHTML(outName, htmlData); err != nil {
 		return err
 	}
-	return nil
+
+	if skipPreview {
+		return nil
+	}
+	return preview(outName)
 }
 
 // parseContent take []byte, pass the bytes to blackfriday for convert to html
@@ -95,4 +104,35 @@ func parseContent(input []byte) []byte {
 func saveHTML(outFname string, data []byte) error {
 	//Write the bytes to the fileName
 	return os.WriteFile(outFname, data, 0644)
+}
+
+func preview(fname string) error {
+	cName := ""
+	cParams := []string{}
+
+	// Define executable based on OS
+	switch runtime.GOOS {
+	case "linux":
+		cName = "xdg-open"
+	case "windows":
+		cName = "cmd.exe"
+		cParams = []string{"/C", "start"}
+	case "darwin":
+		cName = "open"
+	default:
+		return fmt.Errorf("OS not supported")
+	}
+
+	// Append filename to parameters slice
+	cParams = append(cParams, fname)
+
+	// Locate executable in PATH
+	cPath, err := exec.LookPath(cName)
+
+	if err != nil {
+		return err
+	}
+
+	// Open the file using default program
+	return exec.Command(cPath, cParams...).Run()
 }
