@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
@@ -31,6 +32,7 @@ const (
 `
 )
 
+// 
 func main() {
 	// Parse flags
 	fileName := flag.String("file", "", "Markdown file to repview")
@@ -76,6 +78,8 @@ func run(fname string, out io.Writer, skipPreview bool) error {
 	if skipPreview {
 		return nil
 	}
+
+	defer os.Remove(outName)
 	return preview(outName)
 }
 
@@ -134,5 +138,9 @@ func preview(fname string) error {
 	}
 
 	// Open the file using default program
-	return exec.Command(cPath, cParams...).Run()
+	err = exec.Command(cPath, cParams...).Run()
+
+	// Give the browser some time to open file before deleting it
+	time.Sleep(2 * time.Second)
+	return err
 }
