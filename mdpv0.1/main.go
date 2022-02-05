@@ -15,6 +15,7 @@ import (
 	"github.com/russross/blackfriday/v2"
 )
 
+// html header 
 const (
 	header = `<!DOCTYPE html>
 <html lang="en">
@@ -26,13 +27,14 @@ const (
 	</head>
 	<body>
 `
+	// html footer
 	footer = `
 	</body>
 </html>
 `
 )
 
-// 
+// program entry  
 func main() {
 	// Parse flags
 	fileName := flag.String("file", "", "Markdown file to repview")
@@ -51,6 +53,7 @@ func main() {
 	}
 }
 
+// run take fname from cli, io.Writer, and a flag  
 func run(fname string, out io.Writer, skipPreview bool) error {
 	// Read all the data from the input file and check for errors
 	input, err := os.ReadFile(fname)
@@ -74,11 +77,9 @@ func run(fname string, out io.Writer, skipPreview bool) error {
 	if err := saveHTML(outName, htmlData); err != nil {
 		return err
 	}
-
 	if skipPreview {
 		return nil
 	}
-
 	defer os.Remove(outName)
 	return preview(outName)
 }
