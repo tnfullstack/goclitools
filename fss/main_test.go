@@ -13,17 +13,17 @@ func TestRun(t *testing.T) {
 		expected string
 	}{
 		{
-			name: "NoFiter",
+			name: "NoFilter",
 			root: "testdata",
 			cfg: config{
 				ext:  "",
 				size: 0,
 				list: true,
 			},
-			expected: "testdata/dir.log\ntestdata/dir2/script.sh\n",
+			expected: "testdata/dir.log\ntestdata/dir2/script.sh\ntestdata/log.gz\n",
 		},
 		{
-			name: "FinterExtensionMatch",
+			name: "FilterExtensionMatch",
 			root: "testdata",
 			cfg: config{
 				ext:  ".log",
@@ -60,7 +60,7 @@ func TestRun(t *testing.T) {
 				size: 0,
 				list: true,
 			},
-			expected: "",
+			expected: "testdata/log.gz\n",
 		},
 	}
 
