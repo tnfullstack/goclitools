@@ -161,7 +161,8 @@ func TestRunDelExtension(t *testing.T) {
 func createTempDir(t *testing.T, files map[string]int) (dirname string, cleanup func()) {
 	t.Helper()
 
-	tempDir, err := ioutil.TempDir("", "walktest")
+	tempDir, err := ioutil.TempDir("/tmp", "walktest")
+	// fmt.Println(tempDir)
 	if err != nil {
 		t.Fatal(err)
 	}
