@@ -1,0 +1,7 @@
+goos: darwin
+goarch: amd64
+pkg: clitools/colstats
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRun-10    	      10	 373335883 ns/op	238287698 B/op	 2528107 allocs/op
+PASS
+ok  	clitools/colstats	4.617s
