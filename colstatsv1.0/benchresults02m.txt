@@ -1,0 +1,5 @@
+--- FAIL: BenchmarkRun
+    main_test.go:86: cannot open file: open testdata/benchmark/file487.csv: too many open files
+FAIL
+exit status 1
+FAIL	clitools/colstatsv1.0	0.150s
