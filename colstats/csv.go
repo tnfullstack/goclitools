@@ -29,28 +29,33 @@ type statsFunc func(data []float64) float64
 func csv2float(r io.Reader, col int) ([]float64, error) {
 	// Create the CVS reader used to read data from CVS files
 	cr := csv.NewReader(r)
+	cr.ReuseRecord = true
 
 	// Adjusting fo 0 based index
 	col--
 
-	// Read in all CVS Data
-	allData, err := cr.ReadAll()
-	if err != nil {
-		return nil, fmt.Errorf("cannot read data from file: %w", err)
-	}
-
 	var data []float64
 
 	// Loop through all records
-	for i, r := range allData {
+	for i := 0; ; i++ {
+		r, err := cr.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, fmt.Errorf("cannot read data from file: %w", err)
+		}
+
 		if i == 0 {
 			continue
 		}
-		// checking number of columns in CVS file
+
+		// Checking number of columns in CSV file
 		if len(r) <= col {
 			// File does not have that many columns
 			return nil, fmt.Errorf("%w: File has only %d columns", ErrInvalidColumn, len(r))
 		}
+
 		// Try to convert data read into a float number
 		v, err := strconv.ParseFloat(r[col], 64)
 		if err != nil {
