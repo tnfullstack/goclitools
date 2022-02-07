@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// Verify and parse arguments
-	op := flag.String("os", "sum", "Operation to be executed")
+	op := flag.String("op", "sum", "Operation to be executed")
 	col := flag.Int("col", 1, "CVS column on which to execute operation")
 	flag.Parse()
 
@@ -52,7 +52,7 @@ func run(filenames []string, op string, col int, out io.Writer) error {
 		}
 
 		// Parse the CVS into a sclise of float64, numbers
-		data, err := cvs2float(f, col)
+		data, err := csv2float(f, col)
 		if err != nil {
 			return err
 		}

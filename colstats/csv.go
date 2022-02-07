@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/cvs"
+	"encoding/csv"
 	"fmt"
 	"io"
 	"strconv"
@@ -25,10 +25,10 @@ func avg(data []float64) float64 {
 // statsFunc defines a generic statistical function
 type statsFunc func(data []float64) float64
 
-// cvs2float
-func cvs2float(r io.Reader, col int) ([]float64, error) {
+// csv2float
+func csv2float(r io.Reader, col int) ([]float64, error) {
 	// Create the CVS reader used to read data from CVS files
-	cr := cvs.NewReader(r)
+	cr := csv.NewReader(r)
 
 	// Adjusting fo 0 based index
 	col--
