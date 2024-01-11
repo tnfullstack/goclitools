@@ -1,17 +1,23 @@
 package main
 
-// Todo1 app is an upgrade todo app with flag options
+// Todo2 app is an upgrade from todo1 app with feature improving the list output
 
 import (
 	"flag"
 	"fmt"
 	"os"
 	"strings"
-	"todo1"
+	"todo2"
 )
 
 func main() {
-	const todoFileName = ".todo.json"
+	// default file name
+	var todoFileName = ".todo.json"
+
+	// Check if the user defined the ENV VAR for a custom file name
+	if os.Getenv("TODO_FILENAME") != "" {
+		todoFileName = os.Getenv("TODO_FILENAME")
+	}
 
 	// Parsing command line flags
 	task := flag.String("t", "", "Task to be added to the Todo list")
@@ -21,7 +27,7 @@ func main() {
 	flag.Parse()
 
 	// Define an item list
-	l := &todo1.List{}
+	l := &todo2.List{}
 
 	// Use the Get method to read to do items from file
 	if err := l.Get(todoFileName); err != nil {
@@ -32,15 +38,11 @@ func main() {
 	// Decide what to do based on the number of arguments provided
 	switch {
 	case len(os.Args) == 1:
-		for i, item := range *l {
-			fmt.Printf("%d - %s\n", i+1, item.Task)
-		}
-	// For no extra arguments, print the list
+		// For no extra arguments, print the list
+		fmt.Print(l)
 	case *list:
 		// List current todo items
-		for i, item := range *l {
-			fmt.Printf("%d - %s\n", i+1, item.Task)
-		}
+		fmt.Print(l)
 	case *complete > 0:
 		// mark the given item as completed
 		if err := l.Complete(*complete); err != nil {

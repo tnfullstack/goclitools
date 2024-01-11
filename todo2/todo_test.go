@@ -1,4 +1,4 @@
-package todo1
+package todo2
 
 import (
 	"fmt"
