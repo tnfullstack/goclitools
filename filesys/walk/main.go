@@ -37,7 +37,6 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-
 }
 
 func run(root string, out io.Writer, cfg config) error {
