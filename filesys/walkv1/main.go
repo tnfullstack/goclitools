@@ -24,7 +24,7 @@ func main() {
 	root := flag.String("r", ".", "Root directory to start")
 	// Action options
 	list := flag.Bool("l", false, "List files only")
-	del := flag.Bool("k", false, "Delete files")
+	del := flag.Bool("d", false, "Delete files")
 	// Filter options
 	ext := flag.String("e", "", "File extension to filter out")
 	size := flag.Int64("s", 0, "Minimum file size")
